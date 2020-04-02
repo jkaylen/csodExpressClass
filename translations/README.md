@@ -1,0 +1,2 @@
+# Translations
+The majority of the text is system standard text, translated by Cornerstone. The text referring to QR Codes and Signatures has been translated into English and will default to English is the absence of any other translations. To add translated text, find the file translations/en-US.txt and copy it, renaming it to the correct language code, ie es-MX.txt. Edit the file, replacing the English translations.
