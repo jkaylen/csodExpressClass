@@ -1,0 +1,604 @@
+<script>
+expressClassOptions = {
+	'RecordUserScores' : false,
+	'Signature': true,
+	'SignatureMessage': 'I agree that I fully understand the topics covered in this course and will abide by all policies presented.',
+	'SignatureWatermark': true,
+	'InstructorSignature': false,
+	'MaxSignaturePerFile': 25,
+	'MatchQRCodeBy': 'id',
+	'TranslationsURL': 'https://scfiles.csod.com/labs/expressClass/translations/'
+};
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/player-lms-express-class/7.0.67/node_modules/player-core-ui/assets/csod-icons.css" id="player-icons" rel="stylesheet" type="text/css" />
+<link href="https://scfiles.csod.com/labs/expressClass/expressClass.css" rel="stylesheet">
+<script src="https://scfiles.csod.com/labs/expressClass/expressClass.js" type="text/javascript"></script>
+<script src="https://scfiles.csod.com/labs/expressClass/signature_pad.min.js" type="text/javascript"></script>
+
+<script src="https://scfiles.csod.com/labs/expressClass/jspdf.min.js" type="text/javascript"></script>
+<script src="https://scfiles.csod.com/labs/expressClass/jspdf.plugin.autotable.js" type="text/javascript"></script>
+
+<script src="https://scfiles.csod.com/labs/expressClass/jsQR.js" type="text/javascript"></script>
+<style>
+.showModal {
+	display: flex !important;
+}
+</style>
+
+<div class="p-bg-white p-p-lg">
+	<div class="general-information-page">
+		<h2 class="p-sectionheader p-f-sz-3x p-m-b-md" id="txtGeneralInformation" tabindex="-1">General Information</h2>
+		<div class="p-m-b-md">
+			<div class="select-training p-m-b-lg" data-tag="select-training-container" id="select-training-id" tabindex="-1">
+				<label data-tag="general-info-training-label" class="p-f-w-6 p-t-muted">
+					<div class="p-m-b-xs">
+						<span id="txtxCSelectTrainingLabel">Please select a training:</span>
+						<span class="p-t-error50"> *</span>
+					</div>
+				</label>
+				<div class="actions-container p-m-t-md" id="searchTrainingButtons"><!--hide this once selected-->
+					<div class="">
+						<button id="searchTraining" class="p-button basic grey width-large" title="" type="button">
+							<span class="p-button-text" id="txtSearch Existing Training">Search Existing Training</span>
+						</button>
+					</div>
+					<div class="" id="createNewTrainingBox">
+						<div class="divider width-large">or</div>
+						<button class="p-button basic grey width-large" title="" type="button" id="createTrainingButton">
+							<span class="p-button-text" id="txtCreate New Training">Create New Training</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="p-m-t-md" id="selectedTrainingBox" style="display: none";><!--SELECTED TRAINING APPEARS HERE-->
+					<div class="p-tile p-bw-xs p-bs-solid p-bc-grey60 p-br-lg" id="training-tile" tabindex="-1" data-tag="selected-training-tile">
+						<div class="p-p-md training-info">
+							<div class="p-gridlayout gutter-horizontal-sm-device-none">
+								<div class="p-gridcol col-fill-device-none">
+									<h3 class="p-sectionheader p-f-sz-2x p-t-default p-t-wr-el" id="selectedTrainingTitle" title="Team Leadership">TRAINING_TITLE</h3>
+									<div class="p-p-t-sm">
+										<div class="p-t-wr-el p-fx p-align-items-m">
+											<div class="p-pill p-p-xs p-m-r-sm p-br-5x p-p-h-sm p-bg-grey70">
+												<span class="p-text p-f-sz-md p-t-grey  p-f-w-n p-t-wr-el" id="selectedTrainingType" title="Online Class">TRAINING_TYPE</span>
+											</div>
+										</div>
+									</div>
+									<div class="p-p-t-sm">
+										<span class="p-text p-f-sz-md p-t-muted  p-f-w-n p-t-wr-el" id="selectedTrainingDescription">TRAINING_DESC</span>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<button class="borderless primary p-c-pointer p-m-t-md" id="txtxCRemoveTraining">Remove Training</button>
+				</div>
+
+
+
+			</div>
+		</div>
+		<div class="p-m-b-md">
+			<fieldset>
+				<legend class="p-f-sz-md p-t-meta p-m-b-xs" id="txtCompletion Time">Completion Time
+					<span class="p-t-error50"> *</span>
+				</legend>
+				<div class="p-gridlayout gutter-horizontal-md-device-none">
+					<div class="p-gridcol col-6-device-none">
+						<div>
+							<div class="p-textbox form-row is-required label-hidden" data-tag="general-info_date-picker">
+								<label for="date-field-id" class="p-t-grey40"><span class="p-t-error50">*</span></label>
+								<div class="p-input-wrapper">
+									<input type="text" class="p-input p-bc-grey60 p-bg-hv-grey80 p-bc-f-blue50 p-ph-grey50 row-1 block" id="dateCompleted" value="2/2/2020" required="" placeholder="">
+									<span class="p-calendar p-icon-calendar" title="Open Date Picker"></span>
+									<div></div>
+								</div>
+							</div>
+							<div class="p-m-t-xs"><!-- react-empty: 81 --></div>
+						</div>
+					</div>
+					<div class="p-gridcol col-6-device-none">
+						<div class="p-dropdownlist form-row width-block is-required">
+							<div class="p-dropdown-list-wrapper">
+								<select required="" id="timeCompleted" class="default p-bc-f-blue50 p-bg-hv-white p-bc-grey60">
+								
+								</select>
+								<span class="p-icon-down-triangle"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="p-m-b-md">
+			<label class="p-f-sz-md p-t-meta">
+				<div class="p-m-b-xs"><span id="txtTime Zone">Time Zone</span>
+					<span class="p-t-error50"> *</span>
+				</div>
+				<div class="p-dropdownlist form-row width-block is-required">
+					<div class="p-dropdown-list-wrapper">
+						<select id="timeZoneCompleted" required="" class="default p-bc-f-blue50 p-bg-hv-white p-bc-grey60">
+						</select>
+						<span class="p-icon-down-triangle"></span>
+					</div>
+				</div>
+			</label>
+		</div>
+	</div>
+</div>
+<div class="p-bg-white p-p-lg">
+	<div class="general-information-page">
+<h2 class="p-sectionheader p-f-sz-3x p-m-b-md" tabindex="-1" id="txtAttendees">Attendees</h2>
+<div id="_____________hn" class="cso-checkbox-wrapper" ct="CheckBox" style="position:relative;">
+        <fieldset>
+            <input id="inputMode" type="checkbox" data-toggle="cso-checkbox" class="cb-toggle cb-toggle-round-flat noUniform" checked="checked">
+            <label for="inputMode" class="">
+                <span></span>
+                <span class="cso-checkbox-label cso-text-medium cso-text-bold" id="lblMode">Instructor Mode</span>
+            </label>
+        </fieldset>
+    </div>
+<div>
+	<p class="p-text p-f-sz-md p-t-meta  p-f-w-6" id="txtAddAttendeesDescription">Add attendees by selecting organizational units, and/or individual users. You also have the option to scan QR codes.</p>
+	<div class="p-m-v-lg" style="margin-bottom: 10px;">
+		<button id="addAttendees" class="p-button basic grey width-auto" title="" type="button"><span class="p-button-text" id="txtAddAttendees">Add Attendees</span></button> 
+		<button id="startScanning" class="p-button basic grey width-auto" title="" type="button"><span class="p-button-text">Scan QR Codes</span></button>
+	</div>
+	<div>
+		<div class="p-p-v-sm p-bg-grey70" id="bulkOptions">
+			<div class="p-fx p-fx-w-nowrap">
+				<button id="selectAll" class="p-button borderless primary width-auto" type="button">
+					<span class="p-button-text">Select All</span>
+				</button>
+				<button id="deselectAll" class="p-button borderless primary width-auto is-disabled" type="button">
+					<span class="p-button-text">Deselect All</span>
+				</button>
+				<div class="p-fx-g-1 p-m-r-md p-t-a-r">
+					<button id="bulkRecord" class="p-button basic grey width-auto is-disabled" type="button">
+						<span class="p-button-text">Bulk Record</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="p-gridlayout between-device-none">
+			<div class="p-gridcol">
+			</div>
+			<div class="p-gridcol">
+				<button id="removeLink" class="p-button borderless primary width-auto" type="button">
+					<span class="p-button-text">Remove</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<ul class="p-attendees-list p-ls-none" id="attendeesList">
+</ul>
+
+	</div>
+</div>
+
+<div class="p-m-v-md">
+	<div class="p-gridlayout cols-12-device-none cols-auto-device-sm between-device-none">
+		<div class="p-gridcol align-end">
+			<button id="cancelButton" class="p-button basic grey width-auto" title="" type="button" style="display: none;">
+				<span class="p-button-text">Cancel</span>
+			</button>
+		</div>
+		<div class="p-gridcol">
+			<div class="p-gridlayout cols-12-device-none cols-auto-device-sm gutter-horizontal-sm-device-none">
+				<div class="p-gridcol">
+					<button id="submitButton" class="p-button basic primary width-auto" title="" type="button">
+						<span class="p-button-text" id="txtSubmit">Submit</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Find Training Dialog-->
+<div style="display: none;" id="modalSearchTraining">
+	<div class="p-flyout small isOpen altSide" tabindex="0">
+		<div class="background"></div>
+		<div class="inner">
+			<div class="flyout-header p-p-h-md p-p-v-sm p-bw-b-lg p-bs-b-solid p-bc-grey80">
+				<div class="p-gridlayout cols-12-device-none middle-device-none">
+					<div class="p-gridcol">
+						<button class="p-button borderless grey width-auto" title="Close" type="button" id="txtClose">
+							<span class="p-icon-cross"></span>
+						</button>
+						<h1 class="p-sectionheader p-f-sz-4x p-t-default p-t-wr-el" title="Search Existing Training" id="txtSearch Existing Training">Search Existing Training</h1>
+					</div>
+				</div>
+				<div class="p-gridcol">
+					<div class="p-m-t-sm">
+						<div data-tag="search-training-input" class="p-textbox">
+							<div class="with-icons">
+								<i class="p-icon-magnifying-glass icon-left"></i>
+								<input type="search" class="p-textbox-input p-bc-grey60 p-bg-hv-white p-bc-f-blue50" value="" id="searchTrainingBox">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-tag="flyout-body" class="flyout-body">
+				<ul class="training-search-predictions-list" tabindex="-1" id="trainingList">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Alert Dialog-->
+<div tabindex="0" class="p-dialog is-visible" style="display: none;" id="modalAlert">
+	<div class="background"></div>
+	<div class="content">
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol" id="alertDisplay" style="display: none";>
+					<i class="p-icon p-icon-alert-triangle p-f-sz-4x p-t-error50"></i>
+				</div>
+				<div class="p-gridcol">
+					<p class="p-text p-f-sz-lg p-t-default  p-f-w-n" id="alertMessage">Are you sure you want to remove all attendees from the list?</p>
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="alertClose">
+						<span class="p-button-text">No</span>
+					</button>
+				</div>
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="alertConfirm">
+						<span class="p-button-text">Yes</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!--Loading Dialog-->
+<div tabindex="0" class="p-dialog is-visible showModal" id="modalLoading" style="display: none;">
+	<div class="background" style="background-color: black"></div>
+	<div class="content">
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol">
+					<div class="lds-dual-ring"></div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<!--Lock/Unlock Dialog-->
+<div tabindex="0" class="p-dialog is-visible" style="display: none;" id="modalLock">
+	<div class="background"></div>
+	<div class="content">
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol">
+					<!--<i class="p-icon p-icon-alert-triangle p-f-sz-4x p-t-error50"></i>-->
+					<span id="lockPrompt">Set a 4 digit PIN to unlock from instructor mode</span>
+				</div>
+				<div class="p-gridcol">
+					<input type="text" id="pass1" data-order=1 pattern="[0-9]*" maxlength=1 class='pinEntry'>
+					<input type="text" id="pass2" data-order=2 pattern="[0-9]*" maxlength=1 class='pinEntry'>
+					<input type="text" id="pass3" data-order=3 pattern="[0-9]*" maxlength=1 class='pinEntry'>
+					<input type="text" id="pass4" data-order=4 pattern="[0-9]*" maxlength=1 class='pinEntry'>
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="lockCancel">
+						<span class="p-button-text">Cancel</span>
+					</button>
+				</div>
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="lockOk">
+						<span class="p-button-text">Ok</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!--Scanning Dialog-->
+<div tabindex="0" class="p-dialog is-visible" id="modalScanQR" style="display: none;">
+	<div class="background"></div>
+	<div class="content">
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol">
+				
+
+ <div id="loadingMessage">Unable to access video stream (please make sure you have a webcam enabled)</div>
+  <canvas id="canvas" hidden></canvas>
+  <div id="output" hidden>
+    <div id="outputMessage">No QR code detected.</div>
+    <div hidden><b>Data:</b> <span id="outputData"></span></div>
+  </div>
+
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+				</div>
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="closeScan">
+						<span class="p-button-text">Close</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!--Signature Dialog-->
+<div tabindex="0" class="p-dialog is-visible" id="modalSignature" style="z-index: 1180; display: none;">
+	<div class="background"></div>
+	<div class="content signature" style="top: -8vh; max-height: 92vh">
+		
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol">
+					<span id="spanSigStatement"></span>
+
+<div id="signature-pad" class="signature-pad">
+	<div class="signature-pad--body">
+		<canvas width="450" height="175" style="touch-action: none; border: 1px solid black;" id="sigPad"></canvas>
+	</div>
+	<div class="signature-pad--footer">
+		<div class="description" id="descriptionSig">Sign above</div>
+	</div>
+</div>
+
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="cancelSig">
+						<span class="p-button-text">Cancel</span>
+					</button>
+				</div>
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button" id="signSig">
+						<span class="p-button-text">Sign</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<!-- User Search-->
+<div class="p-flyout large isOpen" tabindex="0" style="display: none;" id="modalUserSearch">
+	<div class="background"></div>
+	<div class="inner" id="flyout_d2e50366-17e0-4c67-8b70-81b200361fa8">
+		<div class="p-panel p-bg-white" style="height: 100%; overflow: hidden;">
+			<div>
+				<div class="p-flyouttemplate">
+					<div class="p-panel p-p-h-lg p-p-t-lg" style="height: 60px; overflow: hidden;">
+						<div>
+							<span class="p-text p-f-sz-2x p-t-default  p-f-w-b p-t-wr-el" id="lblAddAttendees">Add Attendees</span>
+						</div>
+					</div>
+					<div class="body">
+						<div class="p-tab page-level">
+							<ul role="tablist" class="">
+								<li role="tab" class="p-bc-f-grey50 p-bs-f-sold p-bw-sm" tabindex="0">
+									<div class="tab-item">
+										<span id="querySelector">Search</span>
+									</div>
+									<div class="p-bc-b-primary50 p-bw-b-lg p-bs-b-solid"></div>
+								</li>
+								<!--<li role="tab" class="p-bc-f-grey50 p-bs-f-sold p-bw-sm p-bg-hv-grey70 p-br-t-md" tabindex="0" aria-controls="selectedTab" aria-selected="false">
+									<div class="tab-item">
+										<span>Selected (0)</span>
+									</div>
+										<div class=""></div>
+								</li>-->
+							</ul>
+							<div role="tabpanel" class="p-bw-t-xs -bs-t-solid p-bc-t-grey60">
+								<div class="p-tabitem" data-tag="oupicker-search-tab">
+									<div>
+										<div class="p-panel p-p-lg p-bw-b-xs p-bc-b-grey70 p-bs-b-solid">
+											<div>
+												<div class="p-filter-search" data-tag="oupicker-filter-search" id="filtersearch_ceb8d03e-3e06-4207-8ec5-2718a43291a0">
+												<div class="p-gridlayout">
+													<div class="p-gridcol col-auto-device-none">
+														<div tabindex="-1">
+															<!--<button role="combobox" aria-expanded="false" aria-haspopup="false" aria-owns="filtersearch_ceb8d03e-3e06-4207-8ec5-2718a43291a0_dropdown_list" aria-label="Dropdown Filter" id="filtersearch_ceb8d03e-3e06-4207-8ec5-2718a43291a0_dropdown" class="p-button basic grey width-auto" title="" type="button">
+																<span class="p-button-text">User</span>
+																<span class="p-icon-down-triangle"></span>
+															</button>-->
+<div class="p-dropdownlist form-row width-block is-required">
+							<div class="p-dropdown-list-wrapper">
+								<select required="" id="pickerTypeList" class="default p-bc-f-blue50 p-bg-hv-white p-bc-grey60">
+								</select>
+								<span class="p-icon-down-triangle"></span>
+							</div>
+						</div>
+
+
+
+
+														</div>
+													</div>
+													<div class="p-gridcol col-fill-device-none">
+														<div class="p-predictivesearch form-row">
+															<div tabindex="-1">
+																<div>
+																	<i class="predictor-icon p-icon-magnifying-glass"></i>
+																	<input type="text" class="predictor p-f-w-6 p-bg-hv-grey70 p-bc-f-primary50 p-ph-grey50" id="searchUsers" value="" placeholder="Search by First Name and/or Last Name">
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												</div>
+											</div>
+										</div>
+										<div class="p-panel p-p-h-lg halign-left" style="height: calc(100vh - 22.14rem); overflow: hidden auto;">
+											<div>
+												<div id="SearchResultsList">
+													
+
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-panel p-p-h-lg p-p-v-md p-bw-t-xs p-bc-t-grey70 p-bs-t-solid" style="height: 60px; overflow: hidden;">
+						<div>
+							<div class="p-gridlayout cols-auto-device-none between-device-none">
+								<div class="p-gridcol">
+									<button id="btnUserSearchCancel" class="p-button basic grey width-auto" title="Cancel" type="button">
+										<span class="p-button-text">Cancel</span>
+									</button>
+								</div>
+								<div class="p-gridcol">
+									<button id="btnUserSearchSave" class="p-button basic primary width-auto" title="Save" type="button">
+										<span class="p-button-text">Save</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--User Scoring -->
+<div tabindex="0" class="p-dialog is-visible" style="display: none" id="modalUserScoring">
+	<div class="background"></div>
+	<div class="content" id="dialog_f4539cb5-9bcd-46b2-8453-8408d1674297">
+		<section class="content-body">
+			<div class="p-bw-xs p-bs-b-solid p-bc-b-grey70 p-p-lg">
+				<h2 class="p-sectionheader p-f-sz-3x p-t-default p-t-wr-el" id="UserScoringTitle">Bulk Record (All)</h2>
+			</div>
+			<div class="p-p-lg">
+				<div class="p-gridlayout column-device-none gutter-vertical-sm-device-none">
+					<div class="p-gridcol">
+						<div>
+							<div>
+								<fieldset id="status-field-id" class="p-radio-group desktop" data-tag="record_status_radio_groups" role="radiogroup" aria-required="true">
+									<input type='hidden' value='' id='scoringStatus'>
+									<legend id="lblResult">Result<span class="p-t-error50">*</span></legend>
+									<label class="p-radio-item p-bg-hv-child-af-primary50 p-rb-align-middle" id="lblScoringComplete" for="status-field-id_1">
+										<input type="radio" id="scoringComplete" name="status-field-id" value="1">
+										<span class="p-bg-af-primary50"></span>
+										<span id="lblComplete">Complete</span>
+									</label>
+									<label class="p-radio-item p-bg-hv-child-af-primary50 p-rb-align-middle" id="lblScoringIncomplete" for="status-field-id_-1">
+										<input type="radio" id="scoringIncomplete" name="status-field-id" value="-1">
+										<span class="p-bg-af-primary50"></span>
+										<span id="lblIncomplete">Incomplete</span>
+									</label>
+									<label class="p-radio-item p-bg-hv-child-af-primary50 p-rb-align-middle" id="lblScoringFail" for="status-field-id_0">
+										<input type="radio" id="scoringFail" name="status-field-id" value="0">
+											<span class="p-bg-af-primary50"></span>
+											<span id="lblFail">Fail</span>
+									</label>
+								</fieldset>
+							</div>
+							<div class="p-m-t-sm"></div>
+						</div>
+					</div>
+					<div class="p-gridcol">
+						<label class="p-f-sz-md p-t-meta">
+							<div class="p-m-b-xs">
+								<span id="lblScore">Score</span>
+							</div>
+							<input type="number" min="0" max="99999" id="scoringScore" data-tag="attendees-dialog-record-score-input" class="p-textbox-input p-bc-grey60 p-bg-hv-white p-bc-f-blue50 p-score-input" value="">
+						</label>
+					</div>
+					<div class="p-gridcol">
+						<label class="p-f-sz-md p-t-meta">
+							<div class="p-m-b-xs">
+								<span id="lblComments">Comments</span>
+							</div>
+							<textarea data-tag="attendees-dialog-record-comments-input" id="scoringComments" class="p-textbox-textarea p-bc-grey60 p-bg-hv-white p-bc-f-blue50 is-scrollable resize-none" maxlength="3000" style="min-height: 100px;"></textarea>
+							<!--<div class="p-m-t-xs p-t-a-r">0 / 3000</div>-->
+						</label>
+					</div>
+					<div class="p-gridcol" id="scoringFileUploadDiv">
+						<div class="fileuploader">
+							<div class="filepond--wrapper">
+								<div class="filepond--root filepond--hopper" data-style-button-remove-item-position="left" data-style-button-process-item-position="right" data-style-load-indicator-position="right" data-style-progress-indicator-position="right" style="height:67px;">
+									<input class="filepond--browser" type="file" id="filepond--browser-bgaix4mjr" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/gif,image/jpeg,video/quicktime,video/mp4,video/mpeg,application/pdf,image/png,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,video/x-ms-wmv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/zip,application/x-zip-compressed,multipart/x-zip">
+									<div class="filepond--drop-label" style="transform:translate3d(0px, 0px, 0) ;opacity:1;">
+										<label for="filepond--browser-bgaix4mjr" id="filepond--drop-label-bgaix4mjr" aria-hidden="true">
+											Drop files to upload, or <span class="filepond--label-action" tabindex="0">Browse</span>
+										</label>
+									</div>
+									<div class="filepond--list-scroller" style="transform:translate3d(0px, 0px, 0) ;">
+										<ul class="filepond--list" role="list" id="scoringFileList"></ul>
+									</div>
+									<div class="filepond--panel filepond--panel-root" data-scalable="true">
+										<div class="filepond--panel-top filepond--panel-root"></div>
+										<div class="filepond--panel-center filepond--panel-root" style="transform:translate3d(0px, 70px, 0) scale3d(1, 0, 1) ;"></div>
+										<div class="filepond--panel-bottom filepond--panel-root" style="transform:translate3d(0px, 70px, 0) ;"></div>
+									</div>
+									<span class="filepond--assistant" id="filepond--assistant-bgaix4mjr" role="status" aria-live="polite" aria-relevant="additions"></span>
+									<div class="filepond--drip"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+					<button id="scoringCancel" class="p-button borderless grey width-auto" title="" type="button" data-tag="record-cancel-btn">
+						<span class="p-button-text">Cancel</span>
+					</button>
+				</div>
+				<div class="p-gridcol">
+					<button id="scoringSave" class="p-button borderless grey width-auto" title="" type="button" data-tag="record_save_btn">
+						<!-- react-text: 4355 --> <!-- /react-text -->
+						<span class="p-button-text">Save</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!--Hidden Table for Sig Generation-->
+<div>
+<table id="pdfTable" style="display: none;">
+	<thead>
+		<tr id="pdfTableHeaderRow">
+			<th id="pdfTableUserName">User Name</th>
+			<th id="pdfTableFullName">Full Name</th>
+			<th id="pdfTableSignature">Signature</th>
+    		</tr>
+	</thead>
+	<tbody id="pdfTableBody">
+    	</tbody>
+</table>
+</div>
+
+
+<script>
+initExpressClass(expressClassOptions);
+</script>

@@ -1,0 +1,49 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/player-lms-express-class/7.0.67/node_modules/player-core-ui/assets/csod-icons.css" id="player-icons" rel="stylesheet" type="text/css" />
+<link href="https://scfiles.csod.com/labs/expressClass/expressClass.css" rel="stylesheet">
+<script src="https://scfiles.csod.com/labs/expressClass/expressClass-qrcodegen.js" type="text/javascript"></script>
+<script src="https://scfiles.csod.com/labs/expressClass/qrcodegen.js" type="text/javascript"></script>
+
+<div id="divName" style="display: none;">{FIRSTNAME} {LASTNAME}</div>
+<div class="p-bg-white p-p-lg">
+	<div class="general-information-page">
+		<h2 class="p-sectionheader p-f-sz-3x p-m-b-md" id="txtAttendeePage" tabindex="-1">Attendee Page</h2>
+<div>
+	<p class="p-text p-f-sz-md p-t-meta  p-f-w-6" id="txtAttendeeDirections">To record attendance, allow instructor to scan the code below.</p><br>
+	<div class="p-m-v-lg">
+		<div id="qrcode" style="width: 256px; margin: auto;"><canvas id="qrCodeCanvas"></canvas></div>
+	</div>
+</div>
+
+	</div>
+</div>
+
+<!--Alert Dialog-->
+<div tabindex="0" class="p-dialog is-visible" style="display: none;" id="modalAccess">
+	<div class="background"></div>
+	<div class="content">
+		<section class="content-body">
+			<div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none">
+				<div class="p-gridcol">
+					<i class="p-icon p-icon-alert-triangle p-f-sz-4x p-t-error50"></i>
+				</div>
+				<div class="p-gridcol">
+					<p class="p-text p-f-sz-lg p-t-default  p-f-w-n">You must have access to the LxP for this functionality.</p>
+				</div>
+			</div>
+		</section>
+		<footer class="content-foot">
+			<div class="p-gridlayout between-device-none" style="width: 100%;">
+				<div class="p-gridcol">
+					<button class="p-button borderless grey width-auto" title="" type="button">
+						<span class="p-button-text" id="txtClose">Close</span>
+					</button>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+
+<script>
+initQRCode();
+</script>
