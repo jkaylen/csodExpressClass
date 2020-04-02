@@ -1,0 +1,34 @@
+﻿{
+	"data":
+		{
+			"Sending PDF":"Enviando PDF",
+			"Generating PDF":"Gerando PDF",
+			"Saving Express Class":"Salvando Classe Expressa",
+			"Sign":"Assinar",
+			"Signature":"Assinatura",
+			"Attachment":"Anexo",
+			"Include Subordinates":"Incluir Subordinados",
+			"Searching...":"Buscando...",
+			"Matching User Not Found":"Usuário não Encontrado",
+			"User already added":"Usuário já adicionado",
+			"Added User":"Usuário Adicionado",
+			"Incorrect format for QR Code":"Formato incorreto do QR Code",
+			"(missing timestamp)":"(faltando horário)",
+			"Timestamp Expired!":"Horário Expirado!",
+			"Signature Required!":"Assinatura Obrigatória!",
+			"Participant Mode":"Modo Aluno",
+			"Instructor Mode":"Modo Instrutor",
+			"PIN incorrect. Please try again.":"PIN incorreto. Tente Novamente.",
+			"Please enter your instructor PIN to unlock":"Por favor entre o PIN do instrutor para desbloquear",
+			"Set a 4 digit PIN to unlock from instructor mode":"Defina um PIN de 4 digitos para desbloquear modo instrutor",
+			"Sign above":"Assine acima",
+			"No QR code detected.":"QR Code não detectado",
+			"Unable to access video stream (please make sure you have a webcam enabled)":"Não foi possível acessar o vídeo (verifique se sua webcam está habilitada)",
+			"You also have the option to scan QR codes.":"Você também tem a opção de escanear QR Codes.",
+			"Scan QR Code":"Ler QR Code",
+			"Date Completed":"Data de Conclusão",
+			"Instructor":"Instrutor",
+			"Signature Statement":"Declaração de Assinatura",
+			"Full Name":"Nome Completo"
+		}
+}

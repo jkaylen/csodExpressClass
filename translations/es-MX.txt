@@ -1,0 +1,34 @@
+﻿{
+	"data":
+		{
+			"Sending PDF":"Enviando PDF",
+			"Generating PDF":"Generando PDF",
+			"Saving Express Class":"Guardando Clase Express",
+			"Sign":"Firmar",
+			"Signature":"Firma",
+			"Attachment":"Adjunto archivo",
+			"Include Subordinates":"Incluir subordinados",
+			"Searching...":"Buscando...",
+			"Matching User Not Found":"Usuario coincidente no encontrado",
+			"User already added":"Usuario ya agregado",
+			"Added User":"Usuario agregado",
+			"Incorrect format for QR Code":"Formato incorrecto para el código QR",
+			"(missing timestamp)":"(falta de marca de tiempo)",
+			"Timestamp Expired!":"Marca de tiempo expirada!",
+			"Signature Required!":"¡Firma requerida!",
+			"Participant Mode":"Modo participante",
+			"Instructor Mode":"Modo instructor",
+			"PIN incorrect. Please try again.":"PIN incorrecto. Inténtalo de nuevo.",
+			"Please enter your instructor PIN to unlock":"Ingrese su PIN de instructor para desbloquear",
+			"Set a 4 digit PIN to unlock from instructor mode":"Establezca un PIN de 4 dígitos para desbloquear como instructor",
+			"Sign above":"Firmar arriba",
+			"No QR code detected.":"No se detectó ningún código QR.",
+			"Unable to access video stream (please make sure you have a webcam enabled)":"No se puede acceder a la transmisión de video (asegúrese de tener una cámara web habilitada)",
+			"You also have the option to scan QR codes.":"También tiene la opción de escanear códigos QR.",
+			"Scan QR Code":"Escanear código QR",
+			"Date Completed":"Fecha de finalización",
+			"Instructor":"Instructor",
+			"Signature Statement":"Declaración de Firma",
+			"Full Name":"Nombre Completo"
+		}
+}

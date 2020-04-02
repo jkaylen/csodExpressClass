@@ -1,0 +1,34 @@
+{
+	"data":
+		{
+			"Sending PDF":"Sending PDF",
+			"Generating PDF":"Generating PDF",
+			"Saving Express Class":"Saving Express Class",
+			"Sign":"Sign",
+			"Signature":"Signature",
+			"Attachment":"Attachment",
+			"Include Subordinates":"Include Subordinates",
+			"Searching...":"Searching...",
+			"Matching User Not Found":"Matching User Not Found",
+			"User already added":"User already added",
+			"Added User":"Added User",
+			"Incorrect format for QR Code":"Incorrect format for QR Code",
+			"(missing timestamp)":"(missing timestamp)",
+			"Timestamp Expired!":"Timestamp Expired!",
+			"Signature Required!":"Signature Required!",
+			"Participant Mode":"Participant Mode",
+			"Instructor Mode":"Instructor Mode",
+			"PIN incorrect. Please try again.":"PIN incorrect. Please try again.",
+			"Please enter your instructor PIN to unlock":"Please enter your instructor PIN to unlock",
+			"Set a 4 digit PIN to unlock from instructor mode":"Set a 4 digit PIN to unlock from instructor mode",
+			"Sign above":"Sign above",
+			"No QR code detected.":"No QR code detected.",
+			"Unable to access video stream (please make sure you have a webcam enabled)":"Unable to access video stream (please make sure you have a webcam enabled)",
+			"You also have the option to scan QR codes.":"You also have the option to scan QR codes.",
+			"Scan QR Code":"Scan QR Code",
+			"Date Completed":"Date Completed",
+			"Instructor":"Instructor",
+			"Signature Statement":"Signature Statement",
+			"Full Name":"Full Name"
+		}
+}
