@@ -22,7 +22,7 @@ var bolInstructorSignature = false;
 var bolCheckTimeStamp = false;
 var strTranslationsURL = 'https://scfiles.csod.com/labs/expressClass/translations/';
 //General Express Class Setup
-var strCulture, strAPIPath, strToken, strCorp;
+var strCulture, strAPIPath, strToken, strCorp, strVersion;
 var objECLocalization;
 var objCustomLocalization = {};
 objCustomLocalization.data = {};
@@ -61,7 +61,7 @@ function initExpressClass(objOpt) {
 	if(!document.getElementById('modalLoading')) {
 		createLoadingModal();
 	}
-	
+
 	objOpt = objOpt || {};
 	if('RecordUserScores' in objOpt) {
 		bolIndividualScoring = objOpt.RecordUserScores;
@@ -115,6 +115,7 @@ function getExpressClassToken() {
 			strToken = strMC.substring(strMC.indexOf('"token"')+9,strMC.indexOf('",',strMC.indexOf('"token"')));
 			strCulture = strMC.substring(strMC.indexOf('"cultureName"')+15,strMC.indexOf('",',strMC.indexOf('"cultureName"')));
 			strCorp = strMC.substring(strMC.indexOf('"corp"')+8,strMC.indexOf('",',strMC.indexOf('"corp"')));
+			strVersion = strMC.substring(strMC.indexOf('"version"')+11,strMC.indexOf('",',strMC.indexOf('"version"')));
 			getECLocalization();
 		}
 	};
@@ -151,7 +152,7 @@ function getCustomLocalization(strTryCulture) {
   	};
 	xhr.open("GET", strTranslationsURL + strTryCulture + '.txt', true);
 	xhr.ontimeout = function (e) {
-  getCustomLocalization('en-US');	
+  getCustomLocalization('en-US');
 	};
 	xhr.timeout = 2500;
 	xhr.send();
@@ -172,6 +173,7 @@ function getECPageConfiguration() {
 }
 
 function buildPage() {
+	document.getElementById('player-icons').href = "/player-lms-express-class/" + strVersion + "/node_modules/player-core-ui/assets/csod-icons.css";
 	elmTimeSelect = document.getElementById('timeCompleted');
 	arrKeys = Object.keys(objECPageConfiguration.data[0].dateTime.timeIntervals);
 	for(i=0;i<arrKeys.length;i++) {
@@ -183,7 +185,7 @@ function buildPage() {
 		}
 		elmTimeSelect.appendChild(elmOpt);
 	}
-	
+
 	var dateCurr = new Date(Date.parse(objECPageConfiguration.data[0].dateTime.currentDate));
 	var tmpMonth = parseInt(dateCurr.getMonth()) + 1;
 	var strDateFormat = dateFormat(strCulture);
@@ -196,7 +198,7 @@ function buildPage() {
 	} else {
 		document.getElementById('dateCompleted').value =  tmpMonth + '/' + dateCurr.getDate() + '/' + dateCurr.getFullYear();
 	}
-	
+
 	elmTimeZoneSelect = document.getElementById('timeZoneCompleted');
 	arrKeys = Object.keys(objECPageConfiguration.data[0].timezoneInformation.timezones);
 	for(i=0;i<arrKeys.length;i++) {
@@ -208,14 +210,14 @@ function buildPage() {
 		}
 		elmTimeZoneSelect.appendChild(elmOpt);
 	}
-	
-	
+
+
 	if((objECPageConfiguration.data[0].hasCreateTrainingPermission == true) && (false)) {	//disabled for now, as functionality not built out
 		document.getElementById('createNewTrainingBox').style.display = 'block';
 	} else {
 		document.getElementById('createNewTrainingBox').style.display = 'none';
 	}
-	
+
 	document.getElementById('searchTraining').addEventListener("click", openTrainingSearch);
 	document.getElementById('txtClose').addEventListener("click", closeTrainingSearch);
 	document.getElementById('startScanning').addEventListener("click", startScanQR);
@@ -265,7 +267,7 @@ function buildPage() {
 			return false;
 		}
 	});
-	
+
 	//Video & QR Code setup
 	video = document.createElement("video");
 	canvasElement = document.getElementById("canvas");
@@ -274,7 +276,7 @@ function buildPage() {
 	outputContainer = document.getElementById("output");
 	outputMessage = document.getElementById("outputMessage");
 	outputData = document.getElementById("outputData");
-	
+
 	//Attendee Search Setup
 	document.getElementById('addAttendees').addEventListener("click", openUserSearch);
 	document.getElementById('btnUserSearchCancel').addEventListener("click", closeUserSearch);
@@ -286,20 +288,20 @@ function buildPage() {
 			runUserSearch();
 		}
 	});
-	
+
 	//User Scoring
 	document.getElementById('selectAll').addEventListener("click", selectAllUsers);
 	document.getElementById('deselectAll').addEventListener("click", deSelectAllUsers);
 	document.getElementById('scoringCancel').addEventListener("click", closeScoring);
 	document.getElementById('scoringSave').addEventListener("click", saveUserScoring);
 	document.getElementById('removeLink').addEventListener("click", removeAttendees);
-	
+
 	if(bolIndividualScoring) {
 		document.getElementById('bulkRecord').addEventListener("click", openUserScoringBulk);
 	} else {
 		document.getElementById('bulkRecord').style.display='none';
 	}
-	
+
 	//User Sig
 	if(bolSignature) {
 		document.getElementById('scoringFileUploadDiv').style.display = 'none';
@@ -309,7 +311,7 @@ function buildPage() {
 
 	document.getElementById('cancelSig').onclick = function() { cancelSig(); };
 	document.getElementById('signSig').addEventListener("click", signSig);
-	
+
 	//Lock/Unlock
 	document.getElementById('inputMode').addEventListener("click", lockPrompt);
 	document.getElementById('lockCancel').addEventListener("click", lockCancel);
@@ -317,12 +319,12 @@ function buildPage() {
 	document.getElementById('pass2').addEventListener("keyup", pinEntry);
 	document.getElementById('pass3').addEventListener("keyup", pinEntry);
 	document.getElementById('pass4').addEventListener("keyup", pinEntry);
-	
+
 	document.getElementById('pass4').addEventListener("keypress", submitPinEntry);
-	
+
 	//Submit Setup
 	document.getElementById('submitButton').addEventListener("click", submitPrompt);
-	
+
 	//Add Instructor signature block, if needed
 	if(bolInstructorSignature) {
 		//Need to build user object to send
@@ -360,21 +362,21 @@ function applyLocalization() {
 	document.getElementById('lblScore').innerHTML = objECLocalization.data["Score"];
 	document.getElementById('lblComments').innerHTML = objECLocalization.data["Comments"];
 	document.querySelector('#scoringCancel span').innerHTML = objECLocalization.data["Cancel"];
-	document.querySelector('#scoringSave span').innerHTML = objECLocalization.data["Save"]; 
-	
-	document.querySelector('#signSig span').innerHTML = objCustomLocalization.data["Sign"]; 
+	document.querySelector('#scoringSave span').innerHTML = objECLocalization.data["Save"];
+
+	document.querySelector('#signSig span').innerHTML = objCustomLocalization.data["Sign"];
 	document.querySelector('#cancelSig span').innerHTML = objECLocalization.data["Cancel"];
 	document.getElementById('descriptionSig').innerHTML = objCustomLocalization.data["Sign above"];
 	document.getElementById('outputMessage').innerHTML = objCustomLocalization.data["No QR code detected."];
 	document.getElementById('loadingMessage').innerHTML = objCustomLocalization.data["Unable to access video stream (please make sure you have a webcam enabled)"]
 	document.getElementById('lblMode').innerHTML = objCustomLocalization.data["Instructor Mode"];
-	
+
 	document.querySelector('#startScanning span').innerHTML = objCustomLocalization.data["Scan QR Code"];
-	
+
 	document.getElementById('pdfTableUserName').innerHTML = objECLocalization.data["Username: "];
-	document.getElementById('pdfTableFullName').innerHTML = objCustomLocalization.data["Full Name"]; 
-	document.getElementById('pdfTableSignature').innerHTML = objCustomLocalization.data["Signature"]; 
-	
+	document.getElementById('pdfTableFullName').innerHTML = objCustomLocalization.data["Full Name"];
+	document.getElementById('pdfTableSignature').innerHTML = objCustomLocalization.data["Signature"];
+
 	if(document.getElementById('modalLoading')) {
 		document.getElementById('modalLoading').className = 'p-dialog is-visible';
 	}
@@ -384,13 +386,13 @@ function createLoadingModal() {
 	elmDivModal = document.createElement('div');
 	elmDivModal.className = "p-dialog is-visible";
 	elmDivModal.id = "modalLoading";
-	
+
 	elmDivBG = document.createElement('div');
 	elmDivBG.className = "background";
 	elmDivBG.style.backgroundColor = 'black';
-	
+
 	elmDivModal.appendChild(elmDivBG);
-	
+
 	elmDivContent = document.createElement('div');
 	elmDivContent.className = "content";
 	elmDivContent.innerHTML = '<section class="content-body"><div class="p-gridlayout column-device-none center-device-none gutter-vertical-sm-device-none"><div class="p-gridcol"><div class="lds-dual-ring"></div></div></div></section>';
@@ -456,7 +458,7 @@ function lockMode() {
 	document.getElementById('pass2').value = '';
 	document.getElementById('pass3').value = '';
 	document.getElementById('pass4').value = '';
-	
+
 }
 
 function unlockMode() {
@@ -539,7 +541,7 @@ function signSig() {
 	if(signaturePad.isEmpty()== true) {
 		document.getElementById('descriptionSig').innerHTML = objCustomLocalization.data["Signature Required!"];
 		document.getElementById('descriptionSig').style.color = 'red';
-	
+
 	} else {
 		if(bolSignatureWatermark) {
 			var myCanvas = document.getElementsByTagName('canvas')[1];
@@ -571,7 +573,7 @@ function openSignature() {
 		event.preventDefault();
 		event.stopPropagation();
 	}
-	
+
 	intUserID = this.getAttribute('data-userid');
 
 	intSigUserID = intUserID;
@@ -653,23 +655,23 @@ function populateLOResults(objResults) {
 		elmLi.setAttribute('data-trainingType', objResults.data.trainingPredictiveResultItems[i].type.typeName);
 		elmLi.setAttribute('data-desc', objResults.data.trainingPredictiveResultItems[i].description);
 		elmLi.addEventListener("click", function(evt) { selectLO(this) });
-		
+
 		var elmH2 = document.createElement('h2');
 		elmH2.className = "p-sectionheader p-f-sz-3x p-t-muted p-t-wr-el";
 		elmH2.title = objResults.data.trainingPredictiveResultItems[i].title;
 		elmH2.innerHTML = objResults.data.trainingPredictiveResultItems[i].title;
 		elmLi.appendChild(elmH2);
-		
+
 		var elmDiv = document.createElement('div');
 		elmDiv.className = 'p-p-t-sm';
 		elmDiv.innerHTML = '<div class="p-t-wr-el p-fx p-align-items-m"><div class="p-pill p-p-xs p-m-r-sm p-br-5x p-p-h-sm p-bg-grey70"><span class="p-text p-f-sz-md p-t-grey  p-f-w-n p-t-wr-el" title="' + objResults.data.trainingPredictiveResultItems[i].type.typeName + '">' + objResults.data.trainingPredictiveResultItems[i].type.typeName + '</span></div></div>';
 		elmLi.appendChild(elmDiv);
-		
+
 		var elmDiv = document.createElement('div');
 		elmDiv.className = 'p-p-t-sm';
 		elmDiv.innerHTML = '<span class="p-text p-f-sz-md p-t-muted  p-f-w-n p-t-wr-el">' + objResults.data.trainingPredictiveResultItems[i].description + '</span></div>';
 		elmLi.appendChild(elmDiv);
-		
+
 		elmTrainingList.appendChild(elmLi);
 	}
 }
@@ -680,9 +682,9 @@ function selectLO(elm) {
 	document.getElementById('selectedTrainingType').title = elm.getAttribute('data-trainingType');
 	document.getElementById('selectedTrainingType').innerHTML = elm.getAttribute('data-trainingType');
 	document.getElementById('selectedTrainingDescription').innerHTML = elm.getAttribute('data-desc');
-	
+
 	strLOID = elm.getAttribute('data-loid');
-	
+
 	closeTrainingSearch();
 	document.getElementById('selectedTrainingBox').style.display = 'block';
 	document.getElementById('txtxCRemoveTraining').addEventListener("click", removeSelectTraining);
@@ -721,9 +723,9 @@ function startScanQR() {
 	}
 
 	document.getElementById('modalScanQR').style.display = 'flex';
-	
+
 	changeCamera('environment');
-	
+
 	if(bolSignature) {
 		bolDuringScan = true;
 	}
@@ -752,7 +754,7 @@ function changeCamera(myFacingMode) {
 		video.play();
 		requestAnimationFrame(tick);
 	});
-	
+
 }
 
 function stopScanQR() {
@@ -769,8 +771,8 @@ function searchUsersQR(strQR) {
 			if(arrSearch.length == 3) {
 				var dateSent = new Date(arrSearch[2]);
 				var currDate = new Date();
-				var dif = (currDate - dateSent); 
-                		dif = Math.round((dif/1000)/60); 
+				var dif = (currDate - dateSent);
+                		dif = Math.round((dif/1000)/60);
 				if(dif < 10) {
 					searchUsers(arrSearch[0],arrSearch[1]);
 				} else {
@@ -826,7 +828,7 @@ function addQRUser(objResults, strUnique) {
 		changeCamera(strFacingMode);
 	}
 	bolSearching = false;
-	
+
 }
 
 function drawLine(begin, end, color) {
@@ -943,7 +945,7 @@ function searchUsers(strUser,strUnique,ouTypeID,pageToken) {
 	strUnique = strUnique || 0;
 	ouTypeID = ouTypeID || -1;
 	pageToken = pageToken || '';
-	
+
 	//strUser = encodeURIComponent(strUser);
 	var objRequest = {};
 	objRequest.pageSize = 20;
@@ -961,7 +963,7 @@ function searchUsers(strUser,strUnique,ouTypeID,pageToken) {
 		objRequest.pageToken = pageToken;
 	}
 	var params = JSON.stringify(objRequest);
-	
+
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
@@ -1003,33 +1005,33 @@ function populateUserSearchResults() {
 	if(objSearchResults.pageInfo.totalCount > 0) {
 		intTotalSearchResults = objSearchResults.pageInfo.totalCount;
 	}
-	
+
 	for(i=0;i<objSearchResults.data.length;i++) {
 		populateUserSearchResultAdd(objSearchResults.data[i],i);
 	}
-	
+
 	//Add the result count and pagination
 	var elmPageNationDiv = document.createElement('div');
 	elmPageNationDiv.className ="p-panel p-p-t-sm";
-	
+
 	var elmSecondDiv = document.createElement('div');
-	
+
 	var elmThirdDiv = document.createElement('div');
 	elmThirdDiv.className = "p-gridlayout center-device-none end-device-sm middle-device-none gutter-horizontal-sm-device-none gutter-vertical-sm-device-none";
-	
+
 	var elmCountDiv = document.createElement('div');
 	elmCountDiv.className = "p-gridcol col-12-device-none col-auto-device-sm";
-	
+
 	var elmSpanCount  = document.createElement('div');
 	elmSpanCount.className = "p-text p-f-sz-md p-t-meta  p-f-w-6";
 	if(SearchEndCount > intTotalSearchResults) { SearchEndCount = intTotalSearchResults;}
 	elmSpanCount.innerHTML = SearchStartCount + ' - ' + SearchEndCount + ' of ' + intTotalSearchResults + ' Results';
 	elmCountDiv.appendChild(elmSpanCount);
 	elmThirdDiv.appendChild(elmCountDiv);
-	
+
 	var elmPreviousDiv = document.createElement('div');
 	elmPreviousDiv.className ="p-gridcol col-auto-device-none";
-	
+
 	if((SearchPreviousPage != '') && (SearchPreviousPage != null)) {
 		var elmPrevButton = document.createElement('div');
 		elmPrevButton.className ="p-button borderless grey width-auto is-disabled";
@@ -1040,10 +1042,10 @@ function populateUserSearchResults() {
 		elmPreviousDiv.appendChild(elmPrevButton);
 	}
 	elmThirdDiv.appendChild(elmPreviousDiv);
-	
+
 	var elmNextDiv = document.createElement('div');
 	elmNextDiv.className ="p-gridcol col-auto-device-none";
-	
+
 	if((SearchNextPage != '') && (SearchNextPage != null)) {
 		var elmNextButton = document.createElement('div');
 		elmNextButton.className ="p-button borderless grey width-auto";
@@ -1054,7 +1056,7 @@ function populateUserSearchResults() {
 		elmNextDiv.appendChild(elmNextButton);
 	}
 	elmThirdDiv.appendChild(elmNextDiv);
-	
+
 	elmSecondDiv.appendChild(elmThirdDiv);
 	elmPageNationDiv.appendChild(elmSecondDiv);
 	elmList.appendChild(elmPageNationDiv);
@@ -1076,34 +1078,34 @@ function loadNextPage() {
 
 function populateUserSearchResultAdd(objUser,intArrNum) {
 	var elmList = document.getElementById('SearchResultsList');
-	
+
 	var elmMasterDiv = document.createElement('div');
 	elmMasterDiv.className = 'p-panel p-p-h-md p-p-v-md p-bw-b-xs p-bc-grey70 p-bs-b-solid';
 	elmMasterDiv.setAttribute('data-tag',"oupicker-search-result-item");
 
 	var elmSecondDiv = document.createElement('div');
-	
+
 	var elmThirdDiv = document.createElement('div');
 	elmThirdDiv.className = "p-gridlayout middle-device-none gutter-horizontal-sm-device-none";
-	
+
 	//Checkbox Div
 	var elmCheckboxDiv = document.createElement('div');
 	elmCheckboxDiv.className = 'p-gridcol col-auto-device-none';
-	
+
 	var elmCheckboxDivTwo = document.createElement('div');
 	elmCheckboxDivTwo.setAttribute('data-tag', "ou-checkbox");
-	
+
 	var elmCheckboxDivThree = document.createElement('div');
-	
+
 	var elmLabel = document.createElement('label');
 	elmLabel.className = 'p-checkbox enabled';
-	
+
 	var elmInput = document.createElement('input');
 	elmInput.type = 'checkbox';
 	elmInput.id = objUser.id;
 	elmInput.value = "on";
 	elmLabel.appendChild(elmInput);
-	
+
 	var elmInnerDiv = document.createElement('div');
 	elmInnerDiv.className = 'checkbox-indicator p-bg-grey80 p-bc-grey60 p-bg-hv-grey70';
 	elmInnerDiv.addEventListener("click", changeSelectUser);
@@ -1111,23 +1113,23 @@ function populateUserSearchResultAdd(objUser,intArrNum) {
 	elmInnerDiv.setAttribute('data-selected', 'false');
 	elmInnerDiv.setAttribute('data-userid', objUser.id);
 	elmLabel.appendChild(elmInnerDiv);
-	
+
 	elmCheckboxDivThree.appendChild(elmLabel);
 	elmCheckboxDivTwo.appendChild(elmCheckboxDivThree);
 	elmCheckboxDiv.appendChild(elmCheckboxDivTwo);
 	elmThirdDiv.appendChild(elmCheckboxDiv);
-	
+
 	//Image Div
 	var elmImageOuterDiv = document.createElement('div');
 	elmImageOuterDiv.className = "p-gridcol col-auto-device-none";
-	
+
 	var elmImageDiv = document.createElement('div');
 	elmImageDiv.className = "p-panel";
 	elmImageDiv.style.overflow = 'hidden';
 	elmImageDiv.style.width = '40px';
-	
+
 	var elmSubSecondDiv = document.createElement('div');
-	
+
 	var elmImage = document.createElement('img');
 	elmImage.className="p-image-large";
 	if(objUser.typeId != -1) {
@@ -1139,21 +1141,21 @@ function populateUserSearchResultAdd(objUser,intArrNum) {
 		strRoot = '/clientimg/' + strCorp + '/users/photos/100/';
 		elmImage.src = strRoot + objUser.icon;
 	}
-	
+
 	elmSubSecondDiv.appendChild(elmImage);
 	elmImageDiv.appendChild(elmSubSecondDiv);
 	elmImageOuterDiv.appendChild(elmImageDiv);
 	elmThirdDiv.appendChild(elmImageOuterDiv);
-	
+
 	//Data div
 	var elmDataOuterDiv = document.createElement('div');
 	elmDataOuterDiv.className = "p-gridcol col-fill-device-none";
-	
+
 	var elmSubSecondDiv = document.createElement('div');
-	
+
 	var elmSubThirdDiv = document.createElement('div');
 	elmSubThirdDiv.className = "p-p-b-xs";
-	
+
 	var elmSpan = document.createElement('span');
 	elmSpan.className = "p-text p-f-sz-lg p-t-default  p-f-w-6 p-t-wr-el";
 	if(objUser.typeId == -1) {
@@ -1161,16 +1163,16 @@ function populateUserSearchResultAdd(objUser,intArrNum) {
 	} else {
 		elmSpan.innerHTML = objUser.title;
 	}
-	
+
 	elmSubThirdDiv.appendChild(elmSpan);
 	elmSubSecondDiv.appendChild(elmSubThirdDiv);	//Name spans
-	
-	
+
+
 	var elmSubDiv = document.createElement('div');
-	
+
 	var elmSubDivData = document.createElement('div');
 	elmSubDivData.className = 'p-gridlayout cols-12-device-none cols-auto-device-xs gutter-horizontal-md-device-none';
-	
+
 	elmSubDivData.appendChild(buildSubData(objECLocalization.data["ID:"],objUser.id));
 	elmSubDivData.appendChild(buildSubData(objECLocalization.data["Type:"],objIdToType[objUser.typeId]));
 	if(objUser.typeId == -1) {
@@ -1185,55 +1187,55 @@ function populateUserSearchResultAdd(objUser,intArrNum) {
 		elmSubDivData.appendChild(buildSubData(objECLocalization.data["Owner: "],strOwner));
 	}
 	elmSubDivData.appendChild(buildSubData(objECLocalization.data["Status:"],objUser.status));
-	
+
 	elmSubDiv.appendChild(elmSubDivData);
 	elmSubSecondDiv.appendChild(elmSubDiv);		//Sub data div set
 	elmDataOuterDiv.appendChild(elmSubSecondDiv);
-	
+
 	if(("hasChildren" in objUser) && (objUser.hasChildren == true)) {
 		var elmChildrenDiv = document.createElement("div");
 		elmChildrenDiv.className = "p-m-t-md";
-		
+
 		var elmChildrenSecondDiv = document.createElement("div");
-		
+
 		var elmChildrenThirdDiv = document.createElement("div");
-		
+
 		var elmLabel = document.createElement("label");
 		elmLabel.for = "checkboxSub_" + objUser.id;
 		elmLabel.className = "p-checkbox enabled";
-		
+
 		var elmSpan = document.createElement('span');
 		elmSpan.className ="checkbox-label";
 		elmSpan.innerHTML = objCustomLocalization.data["Include Subordinates"];
 		elmLabel.appendChild(elmSpan);
-		
+
 		var elmInputSub = document.createElement("input");
 		elmInputSub.type = "checkbox";
 		elmInputSub.id = "checkboxSub_" + objUser.id;
 		elmInputSub.value = "on";
 		elmLabel.appendChild(elmInputSub);
-		
+
 		var elmDivSub = document.createElement("div");
 		elmDivSub.className = "checkbox-indicator p-bg-grey80 p-bc-grey60 p-bg-hv-grey70";
-		elmDivSub.id = "divSub_" + objUser.id; 
+		elmDivSub.id = "divSub_" + objUser.id;
 		elmDivSub.setAttribute('data-selected','false');
 		elmDivSub.setAttribute('data-field','includeSubs');
 		elmDivSub.addEventListener("click",changeSub);
 		elmLabel.appendChild(elmDivSub);
-		
-		
+
+
 		elmChildrenThirdDiv.appendChild(elmLabel);
 		elmChildrenSecondDiv.appendChild(elmChildrenThirdDiv);
 		elmChildrenDiv.appendChild(elmChildrenSecondDiv);
 
-		elmDataOuterDiv.appendChild(elmChildrenDiv);	
+		elmDataOuterDiv.appendChild(elmChildrenDiv);
 	}
-	
+
 	elmThirdDiv.appendChild(elmDataOuterDiv);
-	
+
 	elmSecondDiv.appendChild(elmThirdDiv);
 	elmMasterDiv.appendChild(elmSecondDiv);
-	
+
 	elmList.appendChild(elmMasterDiv);
 
 }
@@ -1241,17 +1243,17 @@ function populateUserSearchResultAdd(objUser,intArrNum) {
 function buildSubData(strField,strValue) {
 	var elmDiv = document.createElement('div');
 	elmDiv.className = "p-gridcol";
-	
+
 	var elmSpan = document.createElement('span');
 	elmSpan.className = "p-text p-f-sz-md p-t-default  p-f-w-6";
 	elmSpan.innerHTML = strField;
 	elmDiv.appendChild(elmSpan);
-	
+
 	var elmSpan = document.createElement('span');
 	elmSpan.className = "p-text p-f-sz-md p-t-default  p-f-w-n p-t-wr-fw";
 	elmSpan.innerHTML = strValue;
 	elmDiv.appendChild(elmSpan);
-	
+
 	return elmDiv;
 }
 
@@ -1287,12 +1289,12 @@ function addUsersByOU(objOU) {
 			tmpObj.includeSubs = true;
 		}
 	}
-	
+
 	tmpObj.ouId = objOU.id;
 	objRequest.ouDetails.push(tmpObj);
-	
+
 	var params = JSON.stringify(objRequest);
-	
+
 	strURL = strAPIPath + 'lms-express-class/v1/ExpressClass/ResolveUsersInOU';
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -1304,7 +1306,7 @@ function addUsersByOU(objOU) {
 				for(i=0;i<elmsExistingUsers.length;i++) {
 					arrExistingUsers.push(parseInt(elmsExistingUsers[i].getAttribute('data-id')));
 				}
-				
+
 				var arrOUUserObjects = objectValues(objOUResults.data.userDetailsMap);
 				arrOUUserObjects.sort(function (a, b) { return (a.lastName > b.lastName) ? 1 : (a.lastName === b.lastName) ? ((a.firstName > b.firstName) ? 1 : -1) : -1 });
 				for(i=0;i<arrOUUserObjects.length;i++) {
@@ -1382,54 +1384,54 @@ function changeSelectUser() {
 function addUser(objUser, bolIsInstructor) {
 	bolIsInstructor = bolIsInstructor || false;
 	if("userId" in objUser) { objUser.id = objUser.userId; }
-	
+
 	var elmUL = document.getElementById('attendeesList');
-	
+
 	var elmLi = document.createElement('li');
 	elmLi.className = 'p-p-md p-p-r-none p-bw-xs p-bs-t-solid p-bc-grey70 p-bs-solid';
 	elmLi.id = 'attendee_' + objUser.id;
 	elmLi.setAttribute('data-id', objUser.id);
 	elmLi.setAttribute('data-instructor', bolInstructor);
-	
+
 	var elmOuterDiv = document.createElement('div');
 	elmOuterDiv.className = 'p-gridlayout middle-device-none';
 	//Checkbox
 	var elmDiv = document.createElement('div');
 	elmDiv.className = 'p-gridcol';
-	
+
 	if(!bolIsInstructor) {
 		var elmDivSecond = document.createElement('div');
 		elmDivSecond.setAttribute('data-tag',"attendees-list-item-checkbox");
-	
+
 		var elmDivThird = document.createElement('div');
-	
+
 		var elmLabel = document.createElement('label');
 		elmLabel.className = 'p-checkbox enabled';
-	
+
 		var elmInput = document.createElement('input');
 		elmInput.type= "checkbox";
 		elmInput.value="on";
 		elmInput.id = objUser.id;
 		elmLabel.appendChild(elmInput);
-	
+
 		var elmDivCheckbox = document.createElement('div');
 		elmDivCheckbox.className = "checkbox-indicator p-bg-grey80 p-bc-grey60 p-bg-hv-grey70";
 		elmDivCheckbox.setAttribute('data-selected','false');
 		elmDivCheckbox.setAttribute('data-userid', objUser.id);
 		elmDivCheckbox.addEventListener("click",changeUser);
 		elmLabel.appendChild(elmDivCheckbox);
-	
+
 		elmDivThird.appendChild(elmLabel);
 		elmDivSecond.appendChild(elmDivThird);
 		elmDiv.appendChild(elmDivSecond);
 	}
 	elmOuterDiv.appendChild(elmDiv);
-	
-	
+
+
 	//Image
 	var elmDiv = document.createElement('div');
 	elmDiv.className = 'p-gridcol';
-	
+
 	var elmImg = document.createElement('img');
 	elmImg.className = 'p-image-medium p-image-circle';
 	if((objUser.icon == '') || (objUser.icon == null)) {
@@ -1446,14 +1448,14 @@ function addUser(objUser, bolIsInstructor) {
 	elmImg.alt = "User Image";
 	elmDiv.appendChild(elmImg);
 	elmOuterDiv.appendChild(elmDiv);
-	
+
 	//Data
 	var elmDiv = document.createElement('div');
 	elmDiv.className = 'p-gridcol user-info p-m-h-md';
 	elmDiv.innerHTML = '<span class="p-text p-f-sz-md p-t-default  p-f-w-6 p-t-wr-el" data-field="fullName">' + objUser.firstName + ' ' + objUser.lastName + '</span>'
-	
+
 	var elmDL = document.createElement('dl');
-	
+
 	elmDL.appendChild(addUserDataPoint(objECLocalization.data["ID:"],objUser.userName,'username'));
 	if(bolIndividualScoring) {
 		elmDL.appendChild(addUserDataPoint(objECLocalization.data["Score"] + ':',objECLocalization.data["NotApplicable"],'score'));
@@ -1464,21 +1466,21 @@ function addUser(objUser, bolIsInstructor) {
 	} else {
 			elmDL.appendChild(addUserDataPoint(objCustomLocalization.data["Attachment"] + ':',objECLocalization.data["No"],'attachment'));
 	}
-	
+
 	var elmHiddenDiv = document.createElement('div');
 	elmHiddenDiv.style.display = 'none';
 	elmHiddenDiv.innerHTML = "<span data-field='attachmentID'></span><span data-field='attachmentName'></span><span data-field='attachmentSize'></span><span data-field='status'></span><span data-field='comments'></span><img data-field='sigImage' src=''>";
-	
+
 	elmDL.appendChild(elmHiddenDiv);
 	elmDiv.appendChild(elmDL);
 	elmOuterDiv.appendChild(elmDiv);
-	
+
 	var elmDiv = document.createElement('div');
 	elmDiv.className = 'p-m-r-md';
-	
+
 	var elmInnerDiv = document.createElement('div');
 	elmInnerDiv.className = 'p-gridcol';
-	
+
 	if((bolInstructor) && (bolIndividualScoring) && (!bolIsInstructor)) {
 		var elmButton = document.createElement('button');
 		elmButton.className = 'p-button basic grey width-auto';
@@ -1496,12 +1498,12 @@ function addUser(objUser, bolIsInstructor) {
 		elmButton.addEventListener("click", openSignature);
 		elmInnerDiv.appendChild(elmButton);
 	}
-	
+
 	elmDiv.appendChild(elmInnerDiv);
 	elmOuterDiv.appendChild(elmDiv);
-	
+
 	elmLi.appendChild(elmOuterDiv);
-	
+
 	elmUL.appendChild(elmLi);
 }
 
@@ -1509,17 +1511,17 @@ function addUser(objUser, bolIsInstructor) {
 function addUserDataPoint(strField,strValue,strAttribute) {
 	var tmpOuterDiv = document.createElement('div');
 	tmpOuterDiv.className = "p-fx";
-	
+
 	var tmpdt = document.createElement('dt');
 	tmpdt.className = "p-m-r-xs";
 
 	var tmpSpanID = document.createElement('span');
 	tmpSpanID.className = "p-text p-f-sz-md p-t-muted  p-f-w-n p-t-wr-fw";
 	tmpSpanID.innerHTML = strField;
-	
+
 	tmpdt.appendChild(tmpSpanID);
 	tmpOuterDiv.appendChild(tmpdt);
-	
+
 	var tmpdd = document.createElement('dd');
 	tmpdd.className = "p-t-wr-el";
 
@@ -1527,7 +1529,7 @@ function addUserDataPoint(strField,strValue,strAttribute) {
 	tmpSpanValue.className = "p-text p-f-sz-md p-t-muted  p-f-w-6 p-t-wr-el";
 	tmpSpanValue.innerHTML = strValue;
 	tmpSpanValue.setAttribute('data-field',strAttribute);
-	
+
 	tmpdd.appendChild(tmpSpanValue);
 	tmpOuterDiv.appendChild(tmpdd);
 
@@ -1556,7 +1558,7 @@ function changeUser() {
 		this.classList.add("p-bg-hv-primary50");
 		this.classList.remove("p-bg-grey80");
 		this.classList.remove("p-bc-grey60");
-		this.classList.remove("p-bg-hv-grey70");	
+		this.classList.remove("p-bg-hv-grey70");
 	}
 }
 
@@ -1582,7 +1584,7 @@ function changeSub() {
 		this.classList.add("p-bg-hv-primary50");
 		this.classList.remove("p-bg-grey80");
 		this.classList.remove("p-bc-grey60");
-		this.classList.remove("p-bg-hv-grey70");	
+		this.classList.remove("p-bg-hv-grey70");
 	}
 }
 
@@ -1648,7 +1650,7 @@ function openUserScoringBulk() {
 	document.getElementById('scoringComments').value = '';
 	document.getElementById('scoringFileList').innerHTML = '';
 	document.getElementById('modalUserScoring').style.display = 'flex';
-	
+
 	document.getElementById('lblScoringComplete').addEventListener("click", function(){    setScoreStatus(1); }, false);
 	document.getElementById('lblScoringIncomplete').addEventListener("click", function(){    setScoreStatus(-1); }, false);
 	document.getElementById('lblScoringFail').addEventListener("click", function(){    setScoreStatus(0); }, false);
@@ -1666,7 +1668,7 @@ function openUserScoringSingle() {
 	var intScore = elmLi.querySelector("span[data-field='score']").innerHTML;
 	var intStatus = elmLi.querySelector("span[data-field='status']").innerHTML
 	var strComments = elmLi.querySelector("span[data-field='comments']").innerHTML
-	
+
 	document.getElementById('UserScoringTitle').innerHTML = strName;
 	setScoreStatus(intStatus);
 	document.getElementById('scoringStatus').value = intStatus;
@@ -1674,7 +1676,7 @@ function openUserScoringSingle() {
 	document.getElementById('scoringComments').value = strComments;
 	document.getElementById('scoringFileList').innerHTML = '';
 	document.getElementById('modalUserScoring').style.display = 'flex';
-	
+
 	document.getElementById('lblScoringComplete').addEventListener("click", function(){    setScoreStatus(1); }, false);
 	document.getElementById('lblScoringIncomplete').addEventListener("click", function(){    setScoreStatus(-1); }, false);
 	document.getElementById('lblScoringFail').addEventListener("click", function(){    setScoreStatus(0); }, false);
@@ -1685,11 +1687,11 @@ function saveUserScoring() {
 	var intScore = document.getElementById('scoringScore').value;
 	var strComments = document.getElementById('scoringComments').value;
 	//Get file id??
-	
+
 	for(i=0;i<arrBulkUsers.length;i++) {
 		var elmLi = document.getElementById("attendee_" + arrBulkUsers[i]);
 		elmLi.querySelector("span[data-field='score']").innerHTML = intScore;
-		
+
 		elmLi.querySelector("span[data-field='result']").parentElement.classList.remove("p-status-pass");
 		elmLi.querySelector("span[data-field='result']").parentElement.classList.remove("p-status-incomplete");
 		elmLi.querySelector("span[data-field='result']").parentElement.classList.remove("p-status-fail");
@@ -1730,7 +1732,7 @@ function uploadFile() {
 	var strURL = strAPIPath + 'lms-express-class/v1/ExpressClass/AttendeeFile';
 	var formData = new FormData();
 	formData.append('attendeeFile', file); //NOTE: format may have to change for sending a file created in JS
-	
+
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
@@ -1774,7 +1776,7 @@ function submitPrompt() {
 		strMessage = objECLocalization.data["xCInvalidDateErrorMessage"];
 	} else {
 		var strDate = document.getElementById('dateCompleted').value;
-		
+
 		var strDateFormat = dateFormat(strCulture);
 		if(strDateFormat == 'mm/dd/yyyy') {
 			if(validateDateUS(strDate)) {
@@ -1813,7 +1815,7 @@ function submitPrompt() {
 			var strDateTime = strDate + strTime + '.000';
 			objExpressClass.completionDate = strDateTime;
 			objExpressClass.timezoneId = document.getElementById('timeZoneCompleted').value;
-		
+
 			//Get class datetime object
 	  		strtmpDateTime = strDate + strTime + 'Z';
 	  		var dateClass = new Date(strtmpDateTime);
@@ -1844,7 +1846,7 @@ function submitPrompt() {
 	  			bolNextOk = false;
 	  			strMessage = objECLocalization.data["xCSelectedFutureDateErrorMessage"];
 	  		}
-		}		
+		}
 	}
 	objExpressClass.facilitatorUserId = objECPageConfiguration.data[0].user.id;
 	var elmsLi = document.querySelectorAll('#attendeesList li');
@@ -1872,7 +1874,7 @@ function submitPrompt() {
 			}
 			arrAttendees.push(elmsLi[i].querySelector("span[data-field='fullName']").innerHTML);
 			var objTmp = {};
-			
+
 			objTmp.userId = parseInt(elmsLi[i].getAttribute('data-id'));
 			if(bolIndividualScoring) {
 				objTmp.comment= elmsLi[i].querySelector("span[data-field='comments']").innerHTML;
@@ -1948,10 +1950,10 @@ function validateDateNonUS(testdate) {
 }
 
 function submitRoster() {
-	
+
 	document.getElementById('alertConfirm').style.display = 'none';
 	document.getElementById('alertMessage').innerHTML = objCustomLocalization.data["Saving Express Class"];
-	
+
 	var strURL = strAPIPath + 'lms-express-class/v1/ExpressClass';
 
 	var xhr = new XMLHttpRequest();
@@ -2049,18 +2051,18 @@ function generatePDF(startingInt) {
 		var elmScore = document.createElement("th");
 		elmScore.innerHTML = objECLocalization.data["Score"];
 		document.getElementById('pdfTableHeaderRow').insertBefore(elmScore,document.getElementById('pdfTableSignature'));
-		
+
 		var elmResult = document.createElement("th");
 		elmResult.innerHTML = objECLocalization.data["Result"];
 		document.getElementById('pdfTableHeaderRow').insertBefore(elmResult,document.getElementById('pdfTableSignature'));
-		
+
 	}
-	
+
 	var elmTBody = document.getElementById('pdfTableBody');
 	elmTBody.innerHTML = '';
 	var elmsLi = document.querySelectorAll('#attendeesList li');
 	var arrUserSigIDs = [];
-	
+
 	//Add in instructor each time
 	if(bolInstructorSignature) {
 		i = 0;
@@ -2089,8 +2091,8 @@ function generatePDF(startingInt) {
 			arrUserSigIDs.push(parseInt(elmsLi[i].getAttribute('data-id')));
 		}
 	}
-	
-	
+
+
 	var endingInt;
 	var intMax = startingInt + intMaxPerFile;
 	for(i=startingInt; i<elmsLi.length && arrUserSigIDs.length < intMax;i++) {
@@ -2123,9 +2125,9 @@ function generatePDF(startingInt) {
 	if(endingInt == (elmsLi.length-1)) {
 		endingInt = 0;
 	}
-	
+
 	doc = new jsPDF();
-	
+
 	doc.setFontStyle("bold");
 	doc.setFontSize(20);
 	var splitTitle = doc.splitTextToSize(document.getElementById('selectedTrainingTitle').innerHTML, 160);
@@ -2186,10 +2188,10 @@ function sendPDF(arrUserSigIDs,endingInt) {
 		document.getElementById('alertClose').onclick = function(){	closeAlert();	};
 		document.querySelector('#alertClose span').innerHTML = objECLocalization.data["Close"];
 	}
-	
+
 	//Update to a message about sending the PDF
 	document.getElementById('alertMessage').innerHTML = objCustomLocalization.data["Sending PDF"];
-	
+
 	formData.append('attendeeFile', pdf,'SignatureFile.pdf');
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
