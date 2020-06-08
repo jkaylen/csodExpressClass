@@ -421,6 +421,18 @@ function lockPrompt() {
 }
 function lockCancel() {
 	document.getElementById('modalLock').style.display = 'none';
+	console.log(bolInstructor);
+	if(!bolInstructor) {
+		document.getElementById('inputMode').checked = false;
+		document.getElementById('lockOk').removeEventListener("click", lockMode);
+		document.getElementById('lockOk').addEventListener("click", unlockMode);
+		document.getElementById('lockPrompt').innerHTML = objCustomLocalization.data["Please enter your instructor PIN to unlock"];
+	} else {
+		document.getElementById('inputMode').checked = true;
+		document.getElementById('lockOk').removeEventListener("click", unlockMode);
+		document.getElementById('lockOk').addEventListener("click", lockMode);
+		document.getElementById('lockPrompt').innerHTML = objCustomLocalization.data["Set a 4 digit PIN to unlock from instructor mode"];
+	}
 }
 
 function pinEntry() {
